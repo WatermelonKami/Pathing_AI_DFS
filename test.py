@@ -1,5 +1,6 @@
 #hi
 import math
+point_path = []
 
 class Node:
     def __init__(self, loc=None, x=None,y=None):
@@ -10,6 +11,7 @@ class Node:
 visited = {}
 BreakTheWorld = False
 def main():
+    
     f = open('locations.txt', 'r')
     file = f.readlines()
     locations = []
@@ -61,35 +63,51 @@ def main():
             Nodes[locations.index(loc)].next.append(Nodes[x])
         print(line)
     f.close()
-    start = 'A1'
-    end = 'G1'
-    path = ['B2']*len(locations)
+    start = input()
+    end = input()
+    path = [start]*len(locations)
     length = [0]*len(locations)
-    findPath(Nodes[locations.index(start)], path, end, length, 0)
+
+    
+    findPath(Nodes[locations.index(start)], path, end, length, 0, 0)
     #print(path)
     #print(sum(length))
+    for x in range(len(point_path)):
+        print(point_path[len(point_path)-x-1])
+
+    print("the total length of the path is " + str(bannana))
+    
 
 
-def findPath(node,path, end, length, count):
+def findPath(node,path, end, length, count, final_distance):
     
     if node.loc == end:
         global BreakTheWorld
         BreakTheWorld = True
-        return
+        #print(final_distance)
+        global bannana
+        bannana = final_distance
+        return 
     if visited[node.loc]:
         return
     else:
         visited[node.loc] = True
-    print(node.loc)
+    #print(node.loc)
     for tmp in node.next:
-        dist = distance(node.x,node.y, tmp.x,tmp.y)
+        final_distance += distance(node.x,node.y, tmp.x,tmp.y)
+        
         #print(node.loc, tmp.loc)
         #length[count] = dist
         #path[count] = tmp.loc
         count += 1
-        findPath(tmp, path, end, length, count)
+        findPath(tmp, path, end, length, count,final_distance)
         if BreakTheWorld:
+            point_path.append(node.loc + " to "  + tmp.loc + " is " + str(distance(node.x,node.y, tmp.x,tmp.y)))
             break
+        else:
+            final_distance -= distance(node.x,node.y, tmp.x,tmp.y)
+        
+    
 
 
 def distance(x1,y1,x2,y2):
