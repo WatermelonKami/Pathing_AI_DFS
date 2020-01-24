@@ -1,7 +1,9 @@
-#hi
 import math
+
+#Global variable to keep track of the final path
 point_path = []
 
+#node for the path
 class Node:
     def __init__(self, loc=None, x=None,y=None):
         self.x = x
@@ -10,14 +12,15 @@ class Node:
         self.next = []
 visited = {}
 BreakTheWorld = False
+
+
 def main():
-    
     f = open('locations.txt', 'r')
     file = f.readlines()
     locations = []
     Nodes = []
     ID = 0
-
+    #format the two txt files(not changing the file itself but how its recieved) so that it is easier to use#################################################
     for lines in file:
         line = lines.rstrip('\n')
         line = line.split(' ')
@@ -38,21 +41,18 @@ def main():
         line = lines.rstrip('\n')
         line = line.split(' ')
         loc = line[0]
-        #print(loc)
         if loc == 'END':
             break
         count = int(line[1])
-        #print(count)
         order = []
         for k in range(count+1):
             for x in range(count+1):
-                #print(x)
                 if (x == 0):
                     continue
 
                 elif (x == 1):
                     continue
-
+                    #format connections from least to greatest
                 elif (line[x] > line[x+1]):
                     temp = line[x]
                     line[x] = line[x+1]
@@ -61,17 +61,24 @@ def main():
         for i in range(count):
             x = locations.index(line[i + 2])
             Nodes[locations.index(loc)].next.append(Nodes[x])
-        print(line)
+
+    #input from user
     f.close()
+    print("Please enter in the starting position:")
     start = input()
+    while start not in locations:
+        print("Invalid starting position. Please try again")
+        start = input()
+    print("Please enter in the ending position:")
     end = input()
+    while end not in locations:
+        print("Invalid ending position. Please try again")
+        end = input()
     path = [start]*len(locations)
     length = [0]*len(locations)
 
-    
+    #start the path and print the path
     findPath(Nodes[locations.index(start)], path, end, length, 0, 0)
-    #print(path)
-    #print(sum(length))
     for x in range(len(point_path)):
         print(point_path[len(point_path)-x-1])
 
@@ -84,7 +91,6 @@ def findPath(node,path, end, length, count, final_distance):
     if node.loc == end:
         global BreakTheWorld
         BreakTheWorld = True
-        #print(final_distance)
         global bannana
         bannana = final_distance
         return 
@@ -92,15 +98,12 @@ def findPath(node,path, end, length, count, final_distance):
         return
     else:
         visited[node.loc] = True
-    #print(node.loc)
     for tmp in node.next:
+        #find the right path via DFS constraints given
         final_distance += distance(node.x,node.y, tmp.x,tmp.y)
-        
-        #print(node.loc, tmp.loc)
-        #length[count] = dist
-        #path[count] = tmp.loc
         count += 1
         findPath(tmp, path, end, length, count,final_distance)
+        #if the end has beend located
         if BreakTheWorld:
             point_path.append(node.loc + " to "  + tmp.loc + " is " + str(distance(node.x,node.y, tmp.x,tmp.y)))
             break
@@ -109,7 +112,7 @@ def findPath(node,path, end, length, count, final_distance):
         
     
 
-
+#math function to calculate the distance between 2 individual nodes
 def distance(x1,y1,x2,y2):
     x = math.pow(int(x1)-int(x2), 2)
     y = math.pow(int(y1)-int(y2), 2)
