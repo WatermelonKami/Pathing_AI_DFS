@@ -1,3 +1,3 @@
-# Pathing_AI
-Project 1 for Intro to AI
-hey there
+Program name: 
+Team members: Dakota Wrigley and Jessica Tran
+
