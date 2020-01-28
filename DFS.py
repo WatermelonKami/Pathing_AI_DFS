@@ -36,7 +36,7 @@ def main():
         visited[loc] = False
         ID += 1
     #Closing file locations.txt
-    f.close()
+    f.close(
     
     #Opening and reading file connections.txt until EOF
     f = open('connections.txt', 'r')
